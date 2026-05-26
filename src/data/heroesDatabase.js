@@ -230,10 +230,13 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#3498db',
         image: fotoAllain,
-        equipamentos: [itemBotasResistencia, itemGuardiaoNoiteEterna, itemAbracoGelido],
+        equipamentos: [itemBotasResistencia,itemCapaDeFogo,itemAdagaRelampago,itemFuriaDragao,itemMalhaDeOverlord,itemRaivaSangrenta],
         arcanas: [
-          { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
-          { img: arcanaCaca, nome: 'Caça', quantidade: 10 }
+          { img: arcanaHeranca, nome: 'Herança', quantidade: 4 },
+          { img: arcanaDestino, nome: 'Destino', quantidade: 6},
+          { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 9 },
+          { img: arcanaCaca, nome: 'Caça', quantidade: 1 },
+          { img: arcanaVazio, nome: 'Vazio', quantidade: 10 }
         ],
         tips: 'O Ultimate do Allain o deixa inalvejável. Use para desviar de habilidades fatais.'
       },
@@ -611,8 +614,12 @@ export const heroesDatabase = [
         tier: 'A',
         color: '#3498db',
         image: fotoDharma,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemCeuLimpo,itemBotasTraquilidade,itemMachadoTormento,itemAbracoGelido,itemQuebraEstrela,itemCapaDeSucubo],
+        arcanas: [
+          { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
+          { img: arcanaFurtividade, nome: 'furtividade', quantidade: 10 },
+          { img: arcanaOlhoDeAguia, nome: 'Olho de Aguia', quantidade: 10 }
+        ],
         tips: 'Insira a dica de ouro para o Dharma aqui.'
       },
       {
@@ -1418,12 +1425,16 @@ export const heroesDatabase = [
       {
         id: 80,
         name: 'Nezha',
-        role: 'Rota Superior',
+        role: 'Selva',
         tier: 'A',
         color: '#3498db',
         image: fotoNezha,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemMordidaVoraz,itemBotasResistencia,itemMachadoTormento,itemFuriaDragao,itemInvestidaGlacial,itemDestruidor],
+        arcanas: [
+           { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
+           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
+           { img: arcanaOlhoDeAguia, nome: 'Olho de águia', quantidade: 10 }
+          ],
         tips: 'Seu Ultimate revela a posição de TODOS os inimigos no mapa e permite voar como um míssil até um deles. Perfeito para caçar quem tenta fugir com pouca vida.'
       },
       {
