@@ -54,9 +54,12 @@ import itemCajadoDeFeiticaria from '../assets/cajado_de_feiticaria.png';
 import itemTempestade from '../assets/tempestade.png';
 import itemLaminaMortal from '../assets/lamina_mortal.png';
 import itemLaminaDourada from '../assets/lamina_dourada.png';
+import itemCouracaSelvageria from '../assets/couraca_selvageria.png';
+
 
 
 import arcanaHeranca from '../assets/arcana_heranca.png';
+import arcanaProsperidade from '../assets/arcana_prosperidade.png';
 import arcanaCicatrizBestial from '../assets/arcana_cicatriz_bestial.png';
 import arcanaPerfeicao from '../assets/arcana_perfeicao.png';
 import arcanaCalamidade from '../assets/arcana_calamidade.png';
@@ -198,16 +201,35 @@ import fotoYaria from '../assets/Yaria.png';
 export const heroesDatabase = [
   {id: 1,
         name: 'Agu',
-        role: 'Selva',
-        tier: 'S',
+        role: ['Selva','Atirador'],
+         tier: { 
+        'Selva': 'S', 
+        'Atirador': 'B', 
+        'geral': 'S' 
+    },
         color: '#27ae60',
         image: fotoAgu,
-        equipamentos: [itemMordidaVoraz,itemBotasDestreza,itemAdagaRelampago,itemApocalipse,itemPremonicaoSinistra,itemAlvorada], // Adicione os outros 4 itens aqui
+        builds: {
+    'Selva': [
+      {
+        equipamentos: [itemMordidaVoraz,itemBotasDestreza,itemAdagaRelampago,itemApocalipse,itemPremonicaoSinistra,itemAlvorada], 
         arcanas: [
           { img: arcanaCalamidade, nome: 'Calamidade', quantidade: 10 },
           { img: arcanaCaca, nome: 'Caça', quantidade: 10 },
           { img: arcanaOlhoDeAguia, nome: 'Olho de Águia', quantidade: 10 }
         ],
+      },
+    ],
+    'Atirador': [
+      {
+        label: 'Build Dano',
+        equipamentos: [itemLaminaEterna,itemBotasResistencia,itemAlvorada,itemFoiceDasSombras,itemApocalipse,itemTempestade],
+        arcanas: [
+         // TODO
+        ]
+      }
+    ]
+  },
         tips: 'Insira a dica de ouro para a Agu aqui.'
       },
       {
@@ -217,9 +239,9 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoAlessio,
-        equipamentos: [itemFuriaDragao,itemBotasDestreza],
+        equipamentos: [itemFoiceDasSombras,itemBotasResistencia,itemLaminaEterna,itemAlvorada,itemApocalipse,itemArcoSolar],
         arcanas: [
-          { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 }
+         // TODO
         ],
         tips: 'Insira a dica de ouro para o Alessio aqui.'
       },
@@ -280,7 +302,7 @@ export const heroesDatabase = [
           { img: arcanaCalamidade, nome: 'Calamidade', quantidade: 10 },
           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
           { img: arcanaOlhoDeAguia, nome: 'Olho de águia', quantidade: 10 }
-          
+
         ]
       }
     ],
@@ -326,7 +348,7 @@ export const heroesDatabase = [
         color: '#3498db',
         image: fotoArthur,
         equipamentos: [
-          itemBotasResistencia,itemMachadoTormento,itemBroquelGlacial,itemGuardiaoNoiteEterna,   itemAbracoGelido,itemFuriaDragao
+          itemBotasResistencia,itemMachadoTormento,itemBroquelGlacial,itemGuardiaoNoiteEterna,itemAbracoGelido,itemFuriaDragao
         ],
         arcanas: [
           { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
@@ -338,17 +360,37 @@ export const heroesDatabase = [
       {
         id: 9,
         name: 'Ata',
-        role: 'Selva',
-        tier: 'S',
+        role: ['Rota Superior','Selva'],
+        tier: { 
+        'Selva': 'A', 
+        'Rota Superior': 'S', 
+        'geral': 'S' // O tier que ele vai mostrar quando o botão "Todos" estiver marcado
+    },
         color: '#27ae60',
         image: fotoAta,
+        
+         builds: {
+    'Selva': [
+      {
         equipamentos: [itemArmaduraDoGigante,itemBotasFortitude,itemFuriaDragao,itemCapaDeFogo,itemOlhoDaFenix,itemInvestidaGlacial],
         arcanas: [
           { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
           { img: arcanaHarmonia, nome: 'Harmonia', quantidade: 5 },
           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 5 },
           { img: arcanaVazio, nome: 'Vazio', quantidade: 10 }
+        ]
+      },
+    ],
+    'Rota Superior': [
+      {
+        equipamentos: [itemFuriaDragao,itemBotasFortitude,itemCapaDeFogo,itemOlhoDaFenix,itemMalhaDeOverlord,itemPremonicaoSinistra
         ],
+        arcanas: [
+        // TODO
+        ]
+      }
+    ]
+  },
         tips: 'Insira a dica de ouro para o Ata aqui.'
       },
       {
@@ -371,7 +413,11 @@ export const heroesDatabase = [
     id: 11,
     name: 'Augran',
     role: ['Rota Superior','Selva'],
-    tier: 'A',
+    tier: { 
+    'Selva': 'A', 
+    'Rota Superior': 'B', 
+    'geral': 'A' // O tier que ele vai mostrar quando o botão "Todos" estiver marcado
+    },
     color: '#27ae60',
     image: fotoAugran,
     builds: {
@@ -387,10 +433,10 @@ export const heroesDatabase = [
       },
       {
         label: 'Build Tank',
-        equipamentos: [itemArmaduraDoGigante, itemBotasFortitude, itemFuriaDragao, itemCapaDeFogo, itemOlhoDaFenix, itemCeuLimpo],
+        equipamentos: [itemArmaduraDoGigante, itemBotasFortitude, itemFuriaDragao,itemOlhoDaFenix,itemRaivaSangrenta,itemCapaDeFogo],
         arcanas: [
           { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
-          { img: arcanaHarmonia, nome: 'Harmonia', quantidade: 10 },
+          { img: arcanaCaca, nome: 'Caça', quantidade: 10 },
           { img: arcanaVazio, nome: 'Vazio', quantidade: 10 }
         ]
       }
@@ -537,8 +583,11 @@ export const heroesDatabase = [
     ],
     'Rota Superior': [
       {
-        equipamentos: [],
+        equipamentos: [itemAdagaRelampago,itemBotasResistencia,itemApocalipse,itemMalhaDeEspinhos,itemAlvorada,itemRaivaSangrenta],
         arcanas: [
+          { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
+          { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
+          { img: arcanaOlhoDeAguia, nome: 'Olho de Águia', quantidade: 10 }
           
         ]
       }
@@ -578,8 +627,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#f1c40f',
         image: fotoConsorteYu,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemAdagaRelampago,itemBotasResistencia,itemApocalipse,itemAlvorada,itemLaminaEterna,itemArcoSolar],
+        arcanas: [
+          // TODO
+        ],
         tips: 'A 2ª habilidade da Consorte Yu a deixa imune a ataques físicos. Guarde-a para quando o assassino inimigo pular em você.'
       },
       {
@@ -603,8 +654,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoDaji,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasAgilidade,itemCajadoPeconhento,itemFuriaDoSabio,itemTomoDoSabio,itemBaculoDoVaculo,itemResplendor],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Esconda-se nos arbustos. Use o atordoamento (2ª habilidade) seguido da ultimate e da 1ª habilidade para apagar um alvo.'
       },
       {
@@ -661,12 +714,9 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoDiaochan,
-        equipamentos: [],
+        equipamentos: [itemBotasResistencia,itemSantoGraal,itemTomoInsaciavel,itemMantoDaRuptura,itemVisaoDoProfeta,itemFuriaDoSabio],
         arcanas: [
-           { img: arcanaPressagio, nome: 'Presságio', quantidade: 1 },
-           { img: arcanaPesadelo, nome: 'Pesadelo', quantidade: 9 },
-           { img: arcanaCaca, nome: 'Caça', quantidade: 10 },
-           { img: arcanaTerceiroOlho, nome: 'Terceiro Olho', quantidade: 10 }
+          // TODO
         ],
         tips: 'Fique sempre dentro do círculo da sua Ultimate para reduzir drasticamente o tempo de recarga das suas habilidades.'
       },
@@ -709,8 +759,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoDrBian,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemSantoGraal,itemVisaoDoProfeta,itemFluxoCrepuscular,itemResplendor,itemFuriaDoSabio],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Insira a dica de ouro para o Dr. Bian aqui.'
       },
       {
@@ -764,7 +816,9 @@ export const heroesDatabase = [
       },
       {
         label: 'Build Dano Magico',
-        equipamentos: [],
+        equipamentos: [
+          // TODO
+        ],
         arcanas: [
           { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
            { img: arcanaCaptura, nome: 'Captura', quantidade: 10 },
@@ -782,7 +836,7 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoFang,
-        equipamentos: [],
+        equipamentos: [itemMachadoTormento,itemBotasResistencia,itemLaminaEterna,itemFoiceDasSombras,itemLaminaSangrenta,itemAlvorada],
         arcanas: [
            { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
            { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
@@ -842,8 +896,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#9b59b6',
         image: fotoGanEMo,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemCajadoPeconhento,itemBotasArcano,itemDominoArdente,itemTomoDoSabio,itemFuriaDoSabio,itemBaculoDoVaculo],
+        arcanas: [
+          // TODO
+        ],
         tips: 'A distância é sua melhor amiga. Use o Ultimate para zerar a recarga das suas espadas e dar um dano massivo de longe.'
       },
       {
@@ -853,8 +909,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoGao,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemTomoInsaciavel,itemBotasResistencia,itemCajadoPeconhento,itemMantoDaRuptura,itemFuriaDoSabio,itemBaculoDoVaculo],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Gao precisa entrar no meio da luta. Espere os inimigos gastarem as habilidades de controle antes de pular com o Ultimate.'
       },
       {
@@ -864,8 +922,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoGaro,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemFoiceDasSombras,itemLaminaEterna,itemArcoSolar,itemAlvorada,itemApocalipse],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Ative a 1ª habilidade para ganhar um alcance absurdo nos ataques básicos. Lembre-se de desativar quando precisar recuperar mana.'
       },
       {
@@ -890,8 +950,12 @@ export const heroesDatabase = [
         tier: 'A',
         color: '#3498db',
         image: fotoGuanYu,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemInvestidaGlacial,itemFuriaDragao,itemRaivaSangrenta,itemGuardiaoNoiteEterna,itemPremonicaoSinistra],
+        arcanas: [
+           { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
+           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
+           { img: arcanaOlhoDeAguia, nome: 'Olho de aguia', quantidade: 10 }
+        ],
         tips: 'Nunca pare de andar! Guan Yu precisa estar sempre em movimento para entrar no modo de investida e empurrar os inimigos.'
       },
       {
@@ -962,8 +1026,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#f1c40f',
         image: fotoHouYi,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemFoiceDasSombras,itemLaminaEterna,itemAlvorada,itemApocalipse,itemArcoSolar],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Seu Ultimate atravessa o mapa inteiro. Dispare de longe em outras rotas para iniciar lutas de equipe e ajudar seus aliados.'
       },
       {
@@ -973,8 +1039,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoHuangZhong,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasFortitude,itemFoiceDasSombras,itemLaminaEterna,itemAlvorada,itemTempestade,itemApocalipse],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Quando você usar o Ultimate e montar o canhão, fica imóvel, mas ganha muito alcance e resistência. Posicione-se bem protegido pelos aliados!'
       },{
         id: 49,
@@ -1011,12 +1079,32 @@ export const heroesDatabase = [
       {
         id: 51,
         name: 'Kongming',
-        role: 'Rota do Meio',
-        tier: 'A',
+        role: ['Rota do Meio','Selva'],
+        tier: { 
+    'Selva': 'A', 
+    'Rota do Meio': 'B', 
+    'geral': 'A' // O tier que ele vai mostrar quando o botão "Todos" estiver marcado
+    },
         color: '#9b59b6',
         image: fotoKongming,
+         builds: {
+    'Selva': [
+      {
         equipamentos: [],
-        arcanas: [],
+        arcanas: [
+          
+        ]
+      },
+    ],
+    'Rota do Meio': [
+      {
+        equipamentos: [],
+        arcanas: [
+         
+        ]
+      }
+    ]
+  },
         tips: 'Acumule os feitiços da sua passiva ao redor do corpo antes de entrar na luta. Use o Ultimate para executar inimigos com pouca vida.'
       },
       {
@@ -1047,16 +1135,19 @@ export const heroesDatabase = [
       'Atirador': [
       {
         label: 'Build Dano ',
-        equipamentos: [],
+        equipamentos: [itemBotasResistencia,itemLaminaEterna,itemFoiceDasSombras,itemAlvorada,itemApocalipse,itemDestruidor],
         arcanas: [
-          
+          // TODO
         ]
       },
       {
         label: 'Build Off-tank',
-        equipamentos: [],
+        equipamentos: [itemAbracoGelido,itemBotasResistencia,itemMachadoTormento,itemCercoGelido,itemQuebraEstrela,itemApocalipse],
         arcanas: [
-          
+          { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
+           { img: arcanaProsperidade, nome: 'Prosperidade', quantidade: 5 },
+           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 5 },
+           { img: arcanaOlhoDeAguia, nome: 'Olho de aguia', quantidade: 10 }
         ]
       }
     ],
@@ -1070,7 +1161,7 @@ export const heroesDatabase = [
         tier: 'A',
         color: '#9b59b6',
         image: fotoLadyZhen,
-        equipamentos: [],
+        equipamentos: [itemCajadoPeconhento,itemBotasArcano,itemMascaraDaAgonia,itemFluxoCrepuscular,itemDominoArdente,itemResplendor],
         arcanas: [
           { img: arcanaPesadelo, nome: 'Pesadelo', quantidade: 10 },
           { img: arcanaCaca, nome: 'Caça', quantidade: 10 },
@@ -1131,8 +1222,12 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#3498db',
         image: fotoLiXin,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [
+          // TODO
+        ],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Escolha a forma da Dominação (Dourado) para imunidade a controle e dano em área, ou a forma da Vingança (Vermelho) para velocidade e duelos 1v1.'
       },
       {
@@ -1169,12 +1264,37 @@ export const heroesDatabase = [
       {
         id: 61,
         name: 'Liu Bang',
-        role: 'Rota Superior',
-        tier: 'B',
+        role: ['Rota Superior','Suporte'],
+        tier: { 
+    'Rota Superior': 'B', 
+    'Suporte': 'C', 
+    'geral': 'B' // O tier que ele vai mostrar quando o botão "Todos" estiver marcado
+    },
         color: '#3498db',
         image: fotoLiuBang,
-        equipamentos: [],
-        arcanas: [],
+        builds: {
+    'Rota Superior': [
+      {
+        equipamentos: [
+           // TODO  
+        ],
+        arcanas: [
+         // TODO  
+        ]
+      },
+    ],
+    'Suporte': [
+      {
+        equipamentos: [itemSombraCarmesinRedencao,itemBotasResistencia,itemInvestidaGlacial,itemCapaDeSucubo,itemPremonicaoSinistra,itemCapaDeFogo],
+        arcanas: [
+           { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
+           { img: arcanaHarmonia, nome: 'Harmonia', quantidade: 5 },
+           { img: arcanaCaca, nome: 'Caça', quantidade: 5 },
+           { img: arcanaVazio, nome: 'Vazio', quantidade: 10 }
+        ]
+      }
+    ]
+  },
         tips: 'Fique na rota puxando os minions longe do seu time. Quando uma luta estourar, use seu Ultimate em um aliado para dar escudo e se teletransportar até ele.'
       },
       {
@@ -1229,8 +1349,12 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoLuara,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [
+          // TODO  
+        ],
+        arcanas: [
+          // TODO  
+        ],
         tips: 'Insira a dica de ouro para a Luara aqui.'
       },
       {
@@ -1240,8 +1364,13 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoLuban,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemLaminaEterna,itemFoiceDasSombras,itemAlvorada,itemApocalipse,itemDestruidor],
+        arcanas: [
+           { img: arcanaCalamidade, nome: 'Calamidade', quantidade: 9 },
+           { img: arcanaCaptura, nome: 'Captura', quantidade: 3 },
+           { img: arcanaCaca, nome: 'Caça', quantidade: 10 },
+           { img: arcanaOlhoDeAguia, nome: 'Olho de aguia', quantidade: 10 }
+        ],
         tips: 'Sua passiva (rajada) é seu maior dano e perfura múltiplos inimigos. Use uma habilidade, dê os ataques fortalecidos e repita o ciclo.'
       },
       {
@@ -1280,8 +1409,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#f1c40f',
         image: fotoMarcoPolo,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemAdagaRelampago,itemBotasDestreza,itemApocalipse,itemInvestidaGlacial,itemAlvorada,itemCapaDeSucubo],
+        arcanas: [
+          // TODO  
+        ],
         tips: 'Seus ataques causam Dano Verdadeiro após preencher a marca no inimigo. Aplique as marcas com a 1ª habilidade antes de pular com o Ultimate.'
       },
       {
@@ -1291,8 +1422,12 @@ export const heroesDatabase = [
         tier: 'A',
         color: '#3498db',
         image: fotoMayene,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemMachadoTormento,itemBotasTraquilidade,itemCeuLimpo,itemQuebraEstrela,itemDestruidor,itemAbracoGelido],
+        arcanas: [
+          { img: arcanaMutacao, nome: 'Mutação', quantidade: 10 },
+           { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
+           { img: arcanaOlhoDeAguia, nome: 'Olho de águia', quantidade: 10 } 
+        ],
         tips: 'Mayene funciona como um jogo de luta. Combine a 1ª e a 2ª habilidade em ordens diferentes para executar combos únicos de dano ou controle.'
       },
       {
@@ -1302,8 +1437,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#f1c40f',
         image: fotoMengYa,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemFoiceDasSombras,itemBotasResistencia,itemLaminaEterna,itemAlvorada,itemApocalipse,itemArcoSolar],
+        arcanas: [
+           // TODO
+        ],
         tips: 'Mantenha sua barra de energia no máximo (vermelha) atirando constantemente. Isso fortalece todas as suas habilidades e cura sua vida.'
       },
       {
@@ -1346,8 +1483,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoMilady,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasArcano,itemCajadoPeconhento,itemMascaraDaAgonia,itemFluxoCrepuscular,itemResplendor,itemFuriaDoSabio],
+        arcanas: [
+           // TODO
+        ],
         tips: 'Ela pode invocar exércitos de robôs que recebem dano da torre no lugar dos minions. Excelente para derrubar objetivos muito rápido.'
       },
       {
@@ -1389,8 +1528,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#3498db',
         image: fotoMulan,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemMachadoTormento,itemCouracaSelvageria,itemBotasFortitude,itemCeuLimpo,itemCapaDeSucubo,itemQuebraEstrela],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Alterne as posturas: espadas leves para silenciar o alvo rapidamente, e a espada pesada para ganhar imunidade a controle e causar dano massivo.'
       },
       {
@@ -1401,10 +1542,12 @@ export const heroesDatabase = [
         color: '#27ae60',
         image: fotoMusashi,
         equipamentos: [itemMordidaVoraz,itemBotasTraquilidade,itemMachadoTormento,itemFuriaDragao,itemRaivaSangrenta,itemAbracoGelido],
-        arcanas: [{ img: arcanaLuaVermelha, nome: 'Lua Vermelha', quantidade: 2 },
+        arcanas: [
+           { img: arcanaLuaVermelha, nome: 'Lua Vermelha', quantidade: 2 },
            { img: arcanaMutacao, nome: 'Mutação', quantidade: 8 },
            { img: arcanaFurtividade, nome: 'Furtividade', quantidade: 10 },
-           { img: arcanaOlhoDeAguia, nome: 'Olho de águia', quantidade: 10 }],
+           { img: arcanaOlhoDeAguia, nome: 'Olho de águia', quantidade: 10 }
+          ],
         tips: 'Seu Ultimate persegue o alvo e o isola no ar, não importa para onde ele corra. Use sempre no principal causador de dano inimigo.'
       },
       {
@@ -1488,8 +1631,10 @@ export const heroesDatabase = [
         tier: 'A',
         color: '#f1c40f',
         image: fotoSerDoFluxoAtirador,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemAdagaRelampago,itemBotasResistencia,itemApocalipse,itemAlvorada,itemLaminaEterna,itemDestruidor],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Insira a dica de ouro para este herói aqui.'
       },
       {
@@ -1499,8 +1644,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoSerDoFluxoMago,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemCajadoPeconhento,itemBotasArcano,itemTomoInsaciavel,itemFluxoCrepuscular,itemTomoDoSabio,itemFuriaDoSabio],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Insira a dica de ouro para este herói aqui.'
       },
       {
@@ -1525,8 +1672,10 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoShangguan,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemTomoInsaciavel,itemCajadoPeconhento,itemVisaoDoProfeta,itemBaculoDoVaculo,itemFuriaDoSabio],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Seu Ultimate a faz voar, tornando-a inalvejável enquanto chove dano nos inimigos. Vá para o modo de treino para dominar os 5 avanços necessários para voar!'
       },
       {
@@ -1595,8 +1744,10 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#3498db',
         image: fotoSunCe,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemMachadoTormento,itemBotasResistencia,itemInvestidaGlacial,itemCapaDeSucubo,itemPremonicaoSinistra,itemFuriaDragao],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Seu Ultimate permite que ele dirija um navio pelo mapa inteiro. Você pode levar um aliado de carona para emboscar outras rotas!'
       },
       {
@@ -1651,19 +1802,44 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#3498db',
         image: fotoWuyan,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [itemBotasResistencia,itemMachadoTormento,itemCapaDeFogo,itemInvestidaGlacial,itemCeuLimpo,itemQuebraEstrela],
+        arcanas: [
+          // TODO
+        ],
         tips: 'Os ataques básicos dela têm chance de petrificar o inimigo. Excelente lutadora para causar interrupções constantes durante a luta.'
       },
       {
         id: 97,
         name: 'Xiang Yu',
-        role: 'Rota Superior',
-        tier: 'C',
+        role: ['Rota Superior','Suporte'],
+         tier: { 
+    'Rota Superior': 'C', 
+    'Suporte': 'C', 
+    'geral': 'C' // O tier que ele vai mostrar quando o botão "Todos" estiver marcado
+    },
         color: '#3498db',
         image: fotoXiangYu,
-        equipamentos: [],
-        arcanas: [],
+        builds: {
+    'Suporte': [
+      {
+        equipamentos: [itemSombraCarmesinRedencao,itemBotasFortitude,itemInvestidaGlacial,itemCapaDeFogo,itemFuriaDragao,itemCapaDeSucubo],
+        arcanas: [
+           { img: arcanaDestino, nome: 'Destino', quantidade: 10 },
+           { img: arcanaHarmonia, nome: 'Harmonia', quantidade: 5 },
+           { img: arcanaCaca, nome: 'Caça', quantidade: 5 },
+           { img: arcanaVazio, nome: 'Vazio', quantidade: 10 }
+        ]
+      },
+    ],
+    'Rota Superior': [
+      {
+        equipamentos: [itemBotasResistencia,itemInvestidaGlacial,itemCapaDeFogo,itemCapaDeSucubo,itemMalhaDeEspinhos,itemFuriaDragao],
+        arcanas: [
+         // TODO
+        ]
+      }
+    ]
+  },
         tips: 'O Ultimate dele causa dano extra se ele estiver com a vida mais baixa que o alvo. Além disso, empurre os assassinos para longe do seu Atirador com a 1ª habilidade.'
       },
       {
@@ -1764,8 +1940,12 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#3498db',
         image: fotoYuanGe,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [
+           // TODO
+        ],
+        arcanas: [
+           // TODO
+        ],
         tips: 'Controlar o marionete exige muita prática. Finja ser um inimigo para se infiltrar, aplique controle de grupo e troque de lugar com o boneco para escapar.'
       },
       {
@@ -1805,8 +1985,12 @@ export const heroesDatabase = [
         tier: 'B',
         color: '#9b59b6',
         image: fotoZhaojun,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [
+           // TODO
+        ],
+        arcanas: [
+           // TODO
+        ],
         tips: 'Seu dano aumenta drasticamente contra alvos que estejam congelados pela sua 2ª habilidade. Congele antes de jogar a chuva de gelo do Ultimate!'
       },
       {
@@ -1816,8 +2000,12 @@ export const heroesDatabase = [
         tier: 'C',
         color: '#9b59b6',
         image: fotoZhouYu,
-        equipamentos: [],
-        arcanas: [],
+        equipamentos: [
+           // TODO
+        ],
+        arcanas: [
+           // TODO
+        ],
         tips: 'Jogue o fogo no chão e, em seguida, use o vento (1ª habilidade) para espalhar as chamas e dominar o campo de batalha.'
       },
       {

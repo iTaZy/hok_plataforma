@@ -71,9 +71,26 @@ function TierList() {
               </div>
 
               <div style={{ flex: 1, padding: '20px', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                {filteredHeroes
-                  .filter(h => h.tier === tier.letter)
-                  .map(hero => (
+  {filteredHeroes
+    .filter(h => {
+      let heroTier;
+      
+      // Se o tier for apenas uma letra (herói simples)
+      if (typeof h.tier === 'string') {
+        heroTier = h.tier;
+      } 
+      // Se o tier for um objeto (herói multi-rotas como o Augran)
+      else if (typeof h.tier === 'object') {
+        if (selectedRole === 'Todos') {
+          heroTier = h.tier.geral; // Usa o tier geral na tela principal
+        } else {
+          heroTier = h.tier[selectedRole]; // Puxa o tier exato da rota clicada
+        }
+      }
+      
+      return heroTier === tier.letter;
+    })
+    .map(hero => (
                     <div 
                       key={hero.id} 
                       onClick={() => handleOpenModal(hero)} // Chama a nova função
