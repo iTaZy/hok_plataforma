@@ -1,8 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getDatabase } from 'firebase/database';
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import { getAnalytics, isSupported } from "firebase/analytics"; // 👈 novo
 
-// Configuração do Firebase usando variáveis de ambiente do Vite
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -13,9 +16,25 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Inicializando o Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exportando os serviços para usarmos nas telas
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const database = getDatabase(app);
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+  isTokenAutoRefreshEnabled: true
+});
+
+// Analytics só funciona no browser e só se o ambiente suportar
+// (evita erro em SSR ou navegadores sem suporte)
+let analytics = null;
+isSupported().then((supported) => {
+  if (supported) {
+    analytics = getAnalytics(app);
+  }
+});
+
+export { auth, db, storage, database, appCheck, analytics };

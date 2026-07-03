@@ -18,18 +18,23 @@ function TierList() {
 
   const roles = ['Todos', 'Rota Superior', 'Selva', 'Rota do Meio', 'Atirador', 'Suporte'];
 
+  // Função para buscar a imagem do herói pelo nome exato nos Matchups
+  const getHeroByName = (name) => {
+    return heroesDatabase.find(h => h.name === name);
+  };
+
   const filteredHeroes = heroesDatabase.filter((hero) => {
     const matchesRole = selectedRole === 'Todos' || 
                         (Array.isArray(hero.role) ? hero.role.includes(selectedRole) : hero.role === selectedRole);
     return matchesRole;
   });
 
-  // Função inteligente para abrir o modal e já selecionar a primeira rota/build caso o herói seja complexo
+  // Função inteligente para abrir o modal e já selecionar a primeira rota/build
   const handleOpenModal = (hero) => {
     setModalHero(hero);
     if (hero.builds) {
-      setSelectedModalRoute(Object.keys(hero.builds)[0]); // Pega a primeira rota (ex: 'Selva')
-      setSelectedModalBuild(0); // Pega a primeira build (ex: 'Build Dano')
+      setSelectedModalRoute(Object.keys(hero.builds)[0]); // Pega a primeira rota
+      setSelectedModalBuild(0); // Pega a primeira build
     } else {
       setSelectedModalRoute(null);
       setSelectedModalBuild(0);
@@ -54,7 +59,8 @@ function TierList() {
                 padding: '8px 20px', borderRadius: '10px', cursor: 'pointer',
                 background: selectedRole === role ? 'rgba(243, 156, 18, 0.2)' : 'rgba(0,0,0,0.3)',
                 border: selectedRole === role ? '1px solid #f39c12' : '1px solid rgba(255,255,255,0.1)',
-                color: selectedRole === role ? '#f39c12' : '#94a3b8', fontWeight: 'bold'
+                color: selectedRole === role ? '#f39c12' : '#94a3b8', fontWeight: 'bold',
+                transition: 'all 0.3s'
               }}
             >
               {role}
@@ -71,32 +77,33 @@ function TierList() {
               </div>
 
               <div style={{ flex: 1, padding: '20px', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-  {filteredHeroes
-    .filter(h => {
-      let heroTier;
-      
-      // Se o tier for apenas uma letra (herói simples)
-      if (typeof h.tier === 'string') {
-        heroTier = h.tier;
-      } 
-      // Se o tier for um objeto (herói multi-rotas como o Augran)
-      else if (typeof h.tier === 'object') {
-        if (selectedRole === 'Todos') {
-          heroTier = h.tier.geral; // Usa o tier geral na tela principal
-        } else {
-          heroTier = h.tier[selectedRole]; // Puxa o tier exato da rota clicada
-        }
-      }
-      
-      return heroTier === tier.letter;
-    })
-    .map(hero => (
+                {filteredHeroes
+                  .filter(h => {
+                    let heroTier;
+                    
+                    // Se o tier for apenas uma letra (herói simples)
+                    if (typeof h.tier === 'string') {
+                      heroTier = h.tier;
+                    } 
+                    // Se o tier for um objeto (herói multi-rotas)
+                    else if (typeof h.tier === 'object') {
+                      if (selectedRole === 'Todos') {
+                        heroTier = h.tier.geral; // Usa o tier geral na tela principal
+                      } else {
+                        heroTier = h.tier[selectedRole]; // Puxa o tier exato da rota clicada
+                      }
+                    }
+                    
+                    return heroTier === tier.letter;
+                  })
+                  .map(hero => (
                     <div 
                       key={hero.id} 
-                      onClick={() => handleOpenModal(hero)} // Chama a nova função
+                      onClick={() => handleOpenModal(hero)} 
                       style={{ width: '60px', textAlign: 'center', cursor: 'pointer' }}
                     >
                       <img 
+                        loading="lazy"
                         src={hero.image} 
                         alt={hero.name} 
                         style={{ width: '60px', height: '60px', borderRadius: '10px', border: `2px solid ${tier.color}`, objectFit: 'cover', transition: 'transform 0.2s' }} 
@@ -105,7 +112,7 @@ function TierList() {
                       />
                       <span style={{ fontSize: '10px', display: 'block', marginTop: '5px', color: '#fff' }}>{hero.name}</span>
                     </div>
-                ))}
+                  ))}
               </div>
             </div>
           ))}
@@ -113,7 +120,7 @@ function TierList() {
       </div>
 
       {/* ========================================== */}
-      {/* MODAL DE DETALHES DO HERÓI (SUPER INTELIGENTE) */}
+      {/* MODAL DE DETALHES DO HERÓI                 */}
       {/* ========================================== */}
       {modalHero && (
         <div 
@@ -145,13 +152,13 @@ function TierList() {
 
             {/* Cabeçalho */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
-              <img src={modalHero.image} alt={modalHero.name} style={{ width: '100px', height: '100px', borderRadius: '20px', border: `2px solid ${modalHero.color}`, objectFit: 'cover' }} />
+              <img loading="lazy" src={modalHero.image} alt={modalHero.name} style={{ width: '100px', height: '100px', borderRadius: '20px', border: `2px solid ${modalHero.color}`, objectFit: 'cover' }} />
               <div>
                 <h2 style={{ color: '#fff', margin: '0 0 10px 0', fontSize: '36px' }}>{modalHero.name}</h2>
               </div>
             </div>
 
-            {/* ABAS DE ROTAS (Mostra os botões se tiver builds múltiplas, se não, mostra só uma tag) */}
+            {/* ABAS DE ROTAS */}
             <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(255,255,255,0.05)' }}>
               {(Object.keys(modalHero.builds || {})).concat(
                 modalHero.builds ? [] : (Array.isArray(modalHero.role) ? modalHero.role : [modalHero.role])
@@ -177,10 +184,8 @@ function TierList() {
               <span style={{ color: '#f39c12' }}>⚔️</span> Arsenal Recomendado
             </h4>
 
-            {/* RENDERIZAÇÃO INTELIGENTE: Diferencia Heróis Complexos (Augran) de Simples (Agu) */}
             {modalHero.builds ? (
               <>
-                {/* Abas de Build Dano / Build Tank */}
                 {modalHero.builds[selectedModalRoute]?.length > 1 && (
                   <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
                     {modalHero.builds[selectedModalRoute].map((build, index) => (
@@ -201,10 +206,9 @@ function TierList() {
                   </div>
                 )}
 
-                {/* Equipamentos da Build Selecionada */}
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '20px', borderRadius: '16px', marginBottom: '25px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   {modalHero.builds[selectedModalRoute]?.[selectedModalBuild]?.equipamentos.map((item, index) => (
-                    <img key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '50px', height: '50px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                    <img loading="lazy" key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '50px', height: '50px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }} />
                   ))}
                 </div>
 
@@ -212,23 +216,21 @@ function TierList() {
                   <span style={{ color: '#e74c3c' }}>🔮</span> Arcanas
                 </h4>
                 
-                {/* Arcanas da Build Selecionada */}
                 <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '20px', borderRadius: '16px', marginBottom: '25px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   {modalHero.builds[selectedModalRoute]?.[selectedModalBuild]?.arcanas.map((arcana, index) => (
                     <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.05)', padding: '8px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                      <img src={arcana.img} alt={arcana.nome} style={{ width: '25px', height: '25px', borderRadius: '50%' }} />
+                      <img loading="lazy" src={arcana.img} alt={arcana.nome} style={{ width: '25px', height: '25px', borderRadius: '50%' }} />
                       <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>{arcana.quantidade}x <span style={{ color: '#94a3b8', fontWeight: 'normal' }}>{arcana.nome}</span></span>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              // RENDERIZAÇÃO PARA HERÓIS SIMPLES (Agu)
               <>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '20px', borderRadius: '16px', marginBottom: '25px', border: '1px solid rgba(255,255,255,0.05)' }}>
                   {modalHero.equipamentos && modalHero.equipamentos.length > 0 ? (
                     modalHero.equipamentos.map((item, index) => (
-                      <img key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '50px', height: '50px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                      <img loading="lazy" key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '50px', height: '50px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)' }} />
                     ))
                   ) : <span style={{ color: '#64748b', fontSize: '14px' }}>Não cadastrado.</span>}
                 </div>
@@ -240,7 +242,7 @@ function TierList() {
                   {modalHero.arcanas && modalHero.arcanas.length > 0 ? (
                     modalHero.arcanas.map((arcana, index) => (
                       <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.05)', padding: '8px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <img src={arcana.img} alt={arcana.nome} style={{ width: '25px', height: '25px', borderRadius: '50%' }} />
+                        <img loading="lazy" src={arcana.img} alt={arcana.nome} style={{ width: '25px', height: '25px', borderRadius: '50%' }} />
                         <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff' }}>{arcana.quantidade}x <span style={{ color: '#94a3b8', fontWeight: 'normal' }}>{arcana.nome}</span></span>
                       </div>
                     ))
@@ -249,14 +251,53 @@ function TierList() {
               </>
             )}
 
-            {/* Dica de Ouro (Exibida para todos) */}
-            <h4 style={{ color: '#fff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px' }}>
-              <span style={{ color: '#3498db' }}>💡</span> Dica de Ouro
-            </h4>
-            <div style={{ background: 'rgba(52, 152, 219, 0.1)', borderLeft: '4px solid #3498db', padding: '15px', borderRadius: '0 12px 12px 0' }}>
-              <p style={{ margin: 0, fontStyle: 'italic', color: '#cbd5e1', lineHeight: '1.5', fontSize: '14px' }}>
-                "{modalHero.tips || "Sem dicas adicionais no momento."}"
-              </p>
+            {/* ========================================== */}
+            {/* MATCHUPS: SINERGIAS E COUNTERS NO MODAL    */}
+            {/* ========================================== */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginTop: '10px' }}>
+              
+              {/* SINERGIA (BEST WITH) */}
+              {modalHero.bestWith && modalHero.bestWith.length > 0 && (
+                <div style={{ background: 'rgba(46, 213, 115, 0.05)', border: '1px solid rgba(46, 213, 115, 0.2)', borderRadius: '16px', padding: '16px' }}>
+                  <h4 style={{ color: '#fff', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+                    <span style={{ color: '#2ed573' }}>🤝</span> Forte contra
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {modalHero.bestWith.map((heroName, index) => {
+                      const ally = getHeroByName(heroName);
+                      if (!ally) return null;
+                      return (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.4)', padding: '4px 10px 4px 4px', borderRadius: '30px', border: '1px solid rgba(46, 213, 115, 0.3)' }}>
+                          <img loading="lazy" src={ally.image} alt={ally.name} style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
+                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>{ally.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* COUNTERS (BAD AGAINST) */}
+              {modalHero.badAgainst && modalHero.badAgainst.length > 0 && (
+                <div style={{ background: 'rgba(231, 76, 60, 0.05)', border: '1px solid rgba(231, 76, 60, 0.2)', borderRadius: '16px', padding: '16px' }}>
+                  <h4 style={{ color: '#fff', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+                    <span style={{ color: '#e74c3c' }}>⚠️</span> Fraco contra
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {modalHero.badAgainst.map((heroName, index) => {
+                      const enemy = getHeroByName(heroName);
+                      if (!enemy) return null;
+                      return (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.4)', padding: '4px 10px 4px 4px', borderRadius: '30px', border: '1px solid rgba(231, 76, 60, 0.3)' }}>
+                          <img loading="lazy" src={enemy.image} alt={enemy.name} style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
+                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>{enemy.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
             </div>
 
           </div>

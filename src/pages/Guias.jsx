@@ -1,54 +1,41 @@
 import React, { useState } from 'react';
 import { heroesDatabase } from '../data/heroesDatabase';
 
-
 function Guias() {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedBuild, setSelectedBuild] = useState(0);
   const [selectedHero, setSelectedHero] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para a barra de pesquisa
-  const [selectedRole, setSelectedRole] = useState('Todos'); // Estado para os filtros de rota
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [selectedRole, setSelectedRole] = useState('Todos'); 
+  
   const heroesData = heroesDatabase;
 
-  
+  const getHeroByName = (name) => {
+    return heroesData.find(h => h.name === name);
+  };
 
-  // Lista de rotas disponíveis para gerar os botões de filtro automaticamente
   const roles = ['Todos', 'Rota Superior','Selva', 'Rota do Meio', 'Atirador', 'Suporte' ];
 
-  // Lógica que filtra os heróis com base na pesquisa E no filtro selecionado
   const filteredHeroes = heroesData.filter((hero) => {
     const matchesSearch = hero.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // LÓGICA À PROVA DE BALAS: Verifica 'roles' (array), 'role' (array) ou 'role' (texto)
     const matchesRole = selectedRole === 'Todos' || 
                         (hero.roles && hero.roles.includes(selectedRole)) || 
                         (Array.isArray(hero.role) ? hero.role.includes(selectedRole) : hero.role === selectedRole);
                         
     return matchesSearch && matchesRole;
   });
-  
-   const getRoleClass = (role) => {
-    if (role === 'Selva') return 'rbadge rb-selva';
-    if (role === 'Atirador') return 'rbadge rb-atirador';
-    if (role === 'Rota do Meio') return 'rbadge rb-meio';
-    if (role === 'Suporte') return 'rbadge rb-suporte';
-    if (role === 'Rota Superior') return 'rbadge rb-top';
-    return 'rbadge';
-  };
 
-  // Função para dar uma cor única para cada rota
   const getRoleColor = (roleName) => {
     switch (roleName) {
-      case 'Rota Superior': return '#3498db'; // Azul
-      case 'Selva': return '#27ae60';         // Verde
-      case 'Rota do Meio': return '#9b59b6';  // Roxo
-      case 'Atirador': return '#e67e22';      // Laranja
-      case 'Suporte': return '#1abc9c';       // Verde água
-      default: return '#7f8c8d';              // Cinza padrão
+      case 'Rota Superior': return '#3498db'; 
+      case 'Selva': return '#27ae60';        
+      case 'Rota do Meio': return '#9b59b6';  
+      case 'Atirador': return '#e67e22';      
+      case 'Suporte': return '#1abc9c';       
+      default: return '#7f8c8d';              
     }
   };
 
-  // Tela de Detalhes do Herói
   if (selectedHero) {
     return (
       <div style={{ minHeight: '100vh', background: '#0b0f19', color: '#e2e8f0', padding: '40px 20px', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}>
@@ -64,22 +51,68 @@ function Guias() {
           
           <div style={{ background: 'linear-gradient(145deg, #111827, #0b0f19)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: `0 10px 40px ${selectedHero.color}20`, borderTop: `4px solid ${selectedHero.color}`, display: 'flex', gap: '40px', flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
             
-            {/* Efeito de brilho de fundo na cor do herói */}
             <div style={{ position: 'absolute', top: '-50px', left: '-50px', width: '200px', height: '200px', background: selectedHero.color, filter: 'blur(100px)', opacity: '0.15', zIndex: 0, pointerEvents: 'none' }}></div>
 
-            {/* Foto do Herói */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', zIndex: 1 }}>
+            {/* ========================================== */}
+            {/* COLUNA ESQUERDA: FOTO E MATCHUPS EMPILHADOS*/}
+            {/* ========================================== */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', zIndex: 1, flex: '0 0 280px', maxWidth: '280px' }}>
               <img 
+                loading="lazy"
                 src={selectedHero.image} 
                 alt={selectedHero.name} 
-                style={{ width: '180px', height: '180px', borderRadius: '20px', objectFit: 'cover', boxShadow: `0 0 25px ${selectedHero.color}40`, border: `2px solid ${selectedHero.color}` }}
+                style={{ width: '100%', aspectRatio: '1/1', borderRadius: '20px', objectFit: 'cover', boxShadow: `0 0 25px ${selectedHero.color}40`, border: `2px solid ${selectedHero.color}` }}
               />
+
+              {/* SINERGIA (BEST WITH) */}
+              {selectedHero.bestWith && selectedHero.bestWith.length > 0 && (
+                <div style={{ background: 'rgba(46, 213, 115, 0.05)', border: '1px solid rgba(46, 213, 115, 0.2)', borderRadius: '16px', padding: '16px' }}>
+                  <h4 style={{ color: '#fff', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+                    <span style={{ color: '#2ed573' }}>🤝</span> Forte contra
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {selectedHero.bestWith.map((heroName, index) => {
+                      const ally = getHeroByName(heroName);
+                      if (!ally) return null;
+                      return (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.4)', padding: '4px 10px 4px 4px', borderRadius: '30px', border: '1px solid rgba(46, 213, 115, 0.3)', transition: 'transform 0.2s', cursor: 'default' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                          <img loading="lazy" src={ally.image} alt={ally.name} style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }} />
+                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>{ally.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* COUNTERS (BAD AGAINST) */}
+              {selectedHero.badAgainst && selectedHero.badAgainst.length > 0 && (
+                <div style={{ background: 'rgba(231, 76, 60, 0.05)', border: '1px solid rgba(231, 76, 60, 0.2)', borderRadius: '16px', padding: '16px' }}>
+                  <h4 style={{ color: '#fff', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+                    <span style={{ color: '#e74c3c' }}>⚠️</span> Fraco contra
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {selectedHero.badAgainst.map((heroName, index) => {
+                      const enemy = getHeroByName(heroName);
+                      if (!enemy) return null;
+                      return (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(0,0,0,0.4)', padding: '4px 10px 4px 4px', borderRadius: '30px', border: '1px solid rgba(231, 76, 60, 0.3)', transition: 'transform 0.2s', cursor: 'default' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                          <img loading="lazy" src={enemy.image} alt={enemy.name} style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }} />
+                          <span style={{ color: '#fff', fontSize: '12px', fontWeight: 'bold' }}>{enemy.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
+            {/* ========================================== */}
+            {/* COLUNA DIREITA: INFORMAÇÕES E BUILDS       */}
+            {/* ========================================== */}
             <div style={{ flex: 1, minWidth: '280px', zIndex: 1 }}>
               <h2 style={{ margin: '0 0 15px 0', fontSize: '38px', color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,0.5)', letterSpacing: '-0.5px' }}>{selectedHero.name}</h2>
               
-              {/* Tabs de Rota (Estilo HUD de Jogo) */}
               <div style={{ display: 'flex', gap: '10px', marginBottom: '25px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(255,255,255,0.05)' }}>
                 {(Object.keys(selectedHero.builds || {})).concat(
                   selectedHero.builds ? [] : (Array.isArray(selectedHero.role) ? selectedHero.role : [selectedHero.role])
@@ -138,7 +171,7 @@ function Guias() {
 
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '16px', marginBottom: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     {selectedHero.builds[selectedRoute]?.[selectedBuild]?.equipamentos.map((item, index) => (
-                      <img key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '55px', height: '55px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15) translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'} />
+                      <img loading="lazy" key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '55px', height: '55px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15) translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'} />
                     ))}
                   </div>
 
@@ -148,7 +181,7 @@ function Guias() {
                   <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '16px', marginBottom: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     {selectedHero.builds[selectedRoute]?.[selectedBuild]?.arcanas.map((arcana, index) => (
                       <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <img src={arcana.img} alt={arcana.nome} style={{ width: '35px', height: '35px', borderRadius: '50%', boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
+                        <img loading="lazy" src={arcana.img} alt={arcana.nome} style={{ width: '35px', height: '35px', borderRadius: '50%', boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
                         <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>{arcana.quantidade}x <span style={{ color: '#94a3b8', fontWeight: 'normal' }}>{arcana.nome}</span></span>
                       </div>
                     ))}
@@ -158,7 +191,7 @@ function Guias() {
                 <>
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '16px', marginBottom: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     {selectedHero.equipamentos?.map((item, index) => (
-                      <img key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '55px', height: '55px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15) translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'} />
+                      <img loading="lazy" key={index} src={item} alt={`Item ${index + 1}`} style={{ width: '55px', height: '55px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)', transition: 'transform 0.2s' }} onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.15) translateY(-5px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'} />
                     ))}
                   </div>
                   <h4 style={{ color: '#fff', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px' }}>
@@ -167,20 +200,13 @@ function Guias() {
                   <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', background: 'rgba(0,0,0,0.2)', padding: '20px', borderRadius: '16px', marginBottom: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     {selectedHero.arcanas?.map((arcana, index) => (
                       <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.05)', padding: '8px 16px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <img src={arcana.img} alt={arcana.nome} style={{ width: '35px', height: '35px', borderRadius: '50%', boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
+                        <img loading="lazy" src={arcana.img} alt={arcana.nome} style={{ width: '35px', height: '35px', borderRadius: '50%', boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
                         <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>{arcana.quantidade}x <span style={{ color: '#94a3b8', fontWeight: 'normal' }}>{arcana.nome}</span></span>
                       </div>
                     ))}
                   </div>
                 </>
               )}
-
-              <h4 style={{ color: '#fff', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px' }}>
-                <span style={{ color: '#3498db' }}>💡</span> Dica de Ouro
-              </h4>
-              <div style={{ background: 'rgba(52, 152, 219, 0.1)', borderLeft: '4px solid #3498db', padding: '15px 20px', borderRadius: '0 12px 12px 0' }}>
-                <p style={{ margin: 0, fontStyle: 'italic', color: '#cbd5e1', lineHeight: '1.6' }}>"{selectedHero.tips}"</p>
-              </div>
             </div>
           </div>
         </div>
@@ -198,7 +224,6 @@ function Guias() {
           <p style={{ color: '#94a3b8', fontSize: '18px' }}>Estratégias, builds e arcanas para dominar o King's Rift.</p>
         </div>
 
-        {/* Barra de Pesquisa Estilo Cyber/Gamer */}
         <div style={{ marginBottom: '35px', maxWidth: '650px', margin: '0 auto 35px auto', position: 'relative' }}>
           <input 
             type="text"
@@ -224,7 +249,6 @@ function Guias() {
           <span style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', fontSize: '20px', opacity: 0.5 }}>🔎</span>
         </div>
 
-        {/* Filtros em Estilo HUD */}
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '50px', justifyContent: 'center' }}>
           {roles.map((role) => (
             <button
@@ -252,7 +276,6 @@ function Guias() {
           ))}
         </div>
 
-        {/* Grade de Heróis Escura com Efeitos de Neon */}
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
@@ -294,13 +317,13 @@ function Guias() {
               }}
             >
               <img 
+                loading="lazy"
                 src={hero.image} 
                 alt={hero.name} 
                 style={{ width: '100%', height: '160px', borderRadius: '12px', objectFit: 'cover', marginBottom: '15px', border: '1px solid rgba(0,0,0,0.5)' }}
               />
               <h3 style={{ margin: '0 0 12px 0', fontSize: '20px', color: '#fff', fontWeight: 'bold', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{hero.name}</h3>
               
-              {/* O segredo da cor está aqui dentro: puxando a cor específica com o 'getRoleColor(r)' */}
               <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 {(hero.roles || (Array.isArray(hero.role) ? hero.role : [hero.role])).map((r, index) => {
                   const corDaRota = getRoleColor(r);
